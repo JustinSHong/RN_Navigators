@@ -2,17 +2,18 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import {
     createBottomTabNavigator,
-    createStackNavigator
+    createStackNavigator,
+    createAppContainer
 } from "react-navigation";
 // screens - components to be rendered by navigators
-import {
-    CatalogueScreen,
-    CategoryScreen,
-    ProductScreen,
-    SearchScreen,
-    SearchResultsScreen,
-    BagScreen
-} from "./MyScreens";
+import BagScreen from "./BagScreen";
+import CatalogueScreen from "./CatalogueScreen";
+import CategoryScreen from "./CategoryScreen";
+import ProductScreen from "./ProductScreen";
+import SearchScreen from "./ProductScreen";
+import SearchResultsScreen from "./SearchResultsScreen";
+// icons
+import { Ionicons } from "@expo/vector-icons";
 
 const CatalogueNavigator = createStackNavigator(
     {
@@ -42,10 +43,35 @@ const AppTabNavigator = createBottomTabNavigator(
         Bag: BagScreen
     },
     {
-        navigationOptions: ({ navigation }) => {
+        navigationOptions: ({ navigation }) => ({
             // icons for each tab defined here
-        },
+            header: null,
+            tabBarIcon: ({ focused, tintColor }) => {
+                const { routeName } = navigation.state;
+                let icon;
 
+                switch (routeName) {
+                    case "Catalogue":
+                        icon = "ios-basket";
+                        break;
+                    case "Search":
+                        icon = "ios-search";
+                        break;
+                    case "Bag":
+                        icon = "ios-appstore";
+                        break;
+                }
+
+                return (
+                    <Ionicons
+                        style={{ width: 25 }}
+                        name={icon}
+                        size={25}
+                        color={tintColor}
+                    />
+                );
+            }
+        }),
         tabBarOptions: {
             initialRouteName: "Catalogue",
             activeTintColor: "#fff",
@@ -57,11 +83,17 @@ const AppTabNavigator = createBottomTabNavigator(
     }
 );
 
-export default class App extends React.Component {
+class HomeScreen extends React.Component {
     render() {
-        return <AppTabNavigator />;
+        return (
+            <View style={{ flex: 1, alignItems: "center" }}>
+                <Text>Home Screen</Text>
+            </View>
+        );
     }
 }
+
+export default createAppContainer(AppTabNavigator);
 
 const styles = StyleSheet.create({
     container: {
